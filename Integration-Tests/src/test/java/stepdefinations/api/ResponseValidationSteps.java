@@ -10,9 +10,9 @@ public class ResponseValidationSteps extends APIBaseTest {
 	@Then("a booking ID should be generated")
 	public void a_booking_ID_should_be_generated() {
 		Assert.assertTrue(
-				response.jsonPath().getString("bookingid") != "" || response.jsonPath().getString("bookingid") != null,
+				String.valueOf(responseData.bookingid) != "" || String.valueOf(responseData.bookingid) != null,
 				"**** Booking ID Is Not Generated *****");
-		System.out.println(response.jsonPath().getString("bookingid"));
+		System.out.println("This is my booking id: " + responseData.bookingid);
 	}
 
 }

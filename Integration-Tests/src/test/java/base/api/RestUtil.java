@@ -5,8 +5,13 @@ import java.util.Map;
 
 import org.testng.Assert;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import pojos.ResponseDataPojo;
 import utilities.PropertiesFileReader;
 
 public class RestUtil extends APIBaseTest {
@@ -18,7 +23,7 @@ public class RestUtil extends APIBaseTest {
 	static Map<String, String> headers = new HashMap<String, String>();
 
 	public RestUtil() {
-		propertiesFileReader= new PropertiesFileReader();
+		propertiesFileReader = new PropertiesFileReader();
 		RestAssured.baseURI = propertiesFileReader.getProperty("qa.base.uri");
 	}
 
@@ -39,6 +44,7 @@ public class RestUtil extends APIBaseTest {
 	}
 
 	public Response hitEndpoint(String method) {
+		ObjectMapper mapper = new ObjectMapper();
 
 		if (method.equalsIgnoreCase("GET")) {
 
@@ -48,6 +54,13 @@ public class RestUtil extends APIBaseTest {
 			System.out.println(response.asPrettyString());
 		}
 
+		try {
+			responseData = mapper.readValue(response.asString(), ResponseDataPojo.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		return response;
 	}
 
